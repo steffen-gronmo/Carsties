@@ -4,7 +4,7 @@ services:
     environment:
       - POSTGRES_PASSWORD=postgrespw
     ports:
-      - "5432:5432"
+      - 5432:5432
     volumes:
       - /var/lib/postgresql/data
   mongodb:
@@ -13,6 +13,25 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=mongopw
     ports:
-      - "27017:27017"
+      - 27017:27017
     volumes:
       - /var/lib/mongodb/data
+  rabbitmq:
+    image: rabbitmq:latest
+    container_name: rabbitmq
+    restart: always
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    ports:
+      - 5672:5672
+      - 15672:15672
+    configs:
+      - source: rabbitmq-plugins
+        target: /etc/rabbitmq/enabled_plugins
+    volumes:
+      - /var/lib/rabbitmq/data
+
+configs:
+  rabbitmq-plugins:
+    content: "[rabbitmq_management]."
