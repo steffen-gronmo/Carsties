@@ -35,6 +35,11 @@ builder.Services.AddMassTransit(x =>
             e.UseMessageRetry(r => r.Interval(5, 5));
             e.ConfigureConsumer<AuctionUpdatedConsumer>(context);
         });
+        cfg.ReceiveEndpoint("search-auction-deleted", e =>
+        {
+            e.UseMessageRetry(r => r.Interval(5, 5));
+            e.ConfigureConsumer<AuctionDeletedConsumer>(context);
+        });
         cfg.ConfigureEndpoints(context);
     });
 });

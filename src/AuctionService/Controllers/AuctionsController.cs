@@ -130,6 +130,8 @@ public class AuctionsController : ControllerBase
         // TODO: Authorization to verify that the user can delete the auction.
 
         _auctionDbContext.Auctions.Remove(auction);
+
+        await _publishEndpoint.Publish(new AuctionDeleted { Id = id.ToString() });
         var result = await _auctionDbContext.SaveChangesAsync() > 0;
 
         if (!result)
