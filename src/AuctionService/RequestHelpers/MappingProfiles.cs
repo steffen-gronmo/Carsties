@@ -16,5 +16,7 @@ public class MappingProfiles : Profile
             .ForMember(d => d.Item, o => o.MapFrom(s => s));
         CreateMap<CreateAuctionDto, Item>();
         CreateMap<AuctionDto, AuctionCreated>();
+        CreateMap<UpdateAuctionDto, AuctionUpdated>()
+            .ForMember(d => d.Id, o => o.MapFrom(_s => "")); // Id is set in controller
     }
 }
