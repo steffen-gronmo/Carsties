@@ -5,6 +5,7 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Contracts;
 using MassTransit;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -57,13 +58,12 @@ public class AuctionsController : ControllerBase
         return Ok(_mapper.Map<AuctionDto>(auction));
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<AuctionDto>> CreateAuction(CreateAuctionDto createAuctionDto)
     {
         var auction = _mapper.Map<Auction>(createAuctionDto);
-
-        // TODO: Add auth + add current user as seller
-        auction.Seller = "test-user";
+        auction.Seller = User.Identity!.Name;
 
         _auctionDbContext.Auctions.Add(auction);
 
@@ -84,6 +84,7 @@ public class AuctionsController : ControllerBase
         );
     }
 
+    [Authorize]
     [HttpPut("{id}")]
     public async Task<ActionResult> UpdateAuction(Guid id, UpdateAuctionDto updateAuctionDto)
     {
@@ -96,7 +97,11 @@ public class AuctionsController : ControllerBase
             return NotFound();
         }
 
-        // TODO: Verify that the user can update the auction.
+        if (auction.Seller != User.Identity!.Name)
+        {
+            return Forbid();
+        }
+
         auction.Item.Make = updateAuctionDto.Make ?? auction.Item.Make;
         auction.Item.Model = updateAuctionDto.Model ?? auction.Item.Model;
         auction.Item.Color = updateAuctionDto.Color ?? auction.Item.Color;
@@ -117,6 +122,7 @@ public class AuctionsController : ControllerBase
         return Ok();
     }
 
+    [Authorize]
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteAuction(Guid id)
     {
@@ -127,7 +133,10 @@ public class AuctionsController : ControllerBase
             return NotFound();
         }
 
-        // TODO: Authorization to verify that the user can delete the auction.
+        if (auction.Seller != User.Identity!.Name)
+        {
+            return Forbid();
+        }
 
         _auctionDbContext.Auctions.Remove(auction);
 
