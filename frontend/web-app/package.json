@@ -8,6 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "flowbite-react": "^0.12.10",
     "next": "15.5.6",
     "react": "19.1.0",
     "react-countdown": "^2.3.6",

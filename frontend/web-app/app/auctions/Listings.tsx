@@ -1,29 +1,37 @@
+'use client';
+
+import React from "react";
+import { getData } from "../actions/auctionActions";
+import AppPagination from "../components/AppPagination";
 import AuctionCard from "./AuctionCard";
 import type { TAuction } from "./types";
 
-type TSearchResult = {
-  results: TAuction[];
-  pageCount: number;
-  totalCount: number;
-};
+export default function Listings() {
+  const [auctions, setAuctions] = React.useState<TAuction[]>([]);
+  const [pageCount, setPageCount] = React.useState(0);
+  const [pageNumber, setPageNumber] = React.useState(1);
 
-const getData = async () => {
-  const res = await fetch('http://localhost:6001/search?pageSize=10');
+  React.useEffect(() => {
+    getData(pageNumber).then(data => {
+      setAuctions(data.results);
+      setPageCount(data.pageCount);
+    })
+  }, [pageNumber]);
 
-  if (!res.ok) {
-    throw new Error('Failed to fetch data');
+  if (auctions.length === 0) {
+    return <h3>Loading...</h3>
   }
 
-  return res.json() as Promise<TSearchResult>;
-};
-
-export default async function Listings() {
-  const data = await getData();
   return (
-    <div className="grid grid-cols-4 gap-6">
-      {data && data.results.map(auction => (
-        <AuctionCard key={auction.id} auction={auction} />
-      ))}
-    </div>
+    <>
+      <div className="grid grid-cols-4 gap-6">
+        {auctions.map(auction => (
+          <AuctionCard key={auction.id} auction={auction} />
+        ))}
+      </div>
+      <div className="flex justify-center mt-4">
+        <AppPagination currentPage={pageNumber} pageChanged={setPageNumber} pageCount={pageCount} />
+      </div>
+    </>
   );
 }
