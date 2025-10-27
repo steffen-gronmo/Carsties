@@ -1,26 +1,29 @@
 import { create } from "zustand";
 
 type TState = {
+  orderBy: 'make' | 'endingSoon' | 'new';
+  pageCount: number;
   pageNumber: number;
   pageSize: number;
-  pageCount: number;
   searchTerm: string;
 };
 
 type TActions = {
-  setParams: (params: Partial<TState>) => void;
   reset: () => void;
+  setParams: (params: Partial<TState>) => void;
 };
 
 const initialState: TState = {
+  orderBy: 'make',
+  pageCount: 1,
   pageNumber: 1,
   pageSize: 12,
-  pageCount: 1,
   searchTerm: '',
 };
 
 export const useParamsStore = create<TState & TActions>((set) => ({
   ...initialState,
+  reset: () => set(() => ({ ...initialState })),
   setParams: (params) => set((state) => {
     if ('pageNumber' in params) {
       return { ...state, pageNumber: params.pageNumber };
@@ -33,5 +36,4 @@ export const useParamsStore = create<TState & TActions>((set) => ({
       pageNumber: 1,
     };
   }),
-  reset: () => set(() => ({ ...initialState })),
 }));

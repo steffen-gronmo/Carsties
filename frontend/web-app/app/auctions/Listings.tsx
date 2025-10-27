@@ -13,9 +13,10 @@ export default function Listings() {
   const [data, setData] = React.useState<TData | null>(null);
   
   const params = useParamsStore(useShallow(state => ({
+    orderBy: state.orderBy,
+    pageCount: state.pageCount,
     pageNumber: state.pageNumber,
     pageSize: state.pageSize,
-    pageCount: state.pageCount,
     searchTerm: state.searchTerm,
   })));
   const setParams = useParamsStore(state => state.setParams);
