@@ -8,7 +8,7 @@ type TSearchResult = {
   totalCount: number;
 };
 
-export const getData = async (pageNumber: number, pageSize: number = 4) => {
+export const getData = async (pageNumber: number, pageSize: number) => {
   const res = await fetch(`http://localhost:6001/search?pageSize=${pageSize}&pageNumber=${pageNumber}`);
 
   if (!res.ok) {
