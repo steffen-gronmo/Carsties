@@ -1,6 +1,7 @@
 import { create } from "zustand";
 
 type TState = {
+  filterBy: 'live' | 'endingSoon' | 'finished';
   orderBy: 'make' | 'endingSoon' | 'new';
   pageCount: number;
   pageNumber: number;
@@ -14,6 +15,7 @@ type TActions = {
 };
 
 const initialState: TState = {
+  filterBy: 'live',
   orderBy: 'make',
   pageCount: 1,
   pageNumber: 1,
