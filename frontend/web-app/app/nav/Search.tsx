@@ -1,22 +1,25 @@
 'use client';
 
 import { useParamsStore } from '@/hooks/useParamsStore';
-import React from 'react'
+import { useEffect, useState } from 'react'
 import { FaSearch } from 'react-icons/fa'
 
-export default function Search() {
-  const [searchInput, setSearchInput] = React.useState('');
+const Search = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const persistedSearchTerm = useParamsStore((state) => state.searchTerm);
+  useEffect(() => setSearchTerm(persistedSearchTerm), [persistedSearchTerm]);
 
   const setParams = useParamsStore((state) => state.setParams);
 
-  const onSearch = () => setParams({ searchTerm: searchInput });
+  const onSearch = () => setParams({ searchTerm });
 
   return (
     <div className="flex w-[50%] items-center border-2 border-gray-300 rounded-full py-2 shadow-sm">
       <input
         type="text"
-        value={searchInput}
-        onChange={(e) => setSearchInput(e.target.value)}
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
         onKeyDown={(e) => e.key === 'Enter' && onSearch()}
         placeholder="Search for cars by make, model or color"
         className={`
@@ -38,5 +41,7 @@ export default function Search() {
         />
       </button>
     </div>
-  )
-}
+  );
+};
+
+export default Search;
