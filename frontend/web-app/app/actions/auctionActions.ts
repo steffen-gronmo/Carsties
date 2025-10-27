@@ -2,18 +2,18 @@
 
 import type { TAuction } from "../auctions/types";
 
-type TSearchResult = {
+export type TData = {
   results: TAuction[];
   pageCount: number;
   totalCount: number;
 };
 
-export const getData = async (pageNumber: number, pageSize: number) => {
-  const res = await fetch(`http://localhost:6001/search?pageSize=${pageSize}&pageNumber=${pageNumber}`);
+export const getData = async (query: string) => {
+  const res = await fetch(`http://localhost:6001/search${query}`);
 
   if (!res.ok) {
     throw new Error('Failed to fetch data');
   }
 
-  return res.json() as Promise<TSearchResult>;
+  return res.json() as Promise<TData>;
 };
