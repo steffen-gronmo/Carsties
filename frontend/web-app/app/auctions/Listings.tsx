@@ -8,6 +8,7 @@ import Filters from "./Filters";
 import { useParamsStore } from "@/hooks/useParamsStore";
 import { useShallow } from "zustand/shallow";
 import qs from "query-string";
+import EmptyFilter from "../components/EmptyFilter";
 
 export default function Listings() {
   const [data, setData] = React.useState<TData | null>(null);
@@ -37,18 +38,24 @@ export default function Listings() {
   return (
     <>
       <Filters />
-      <div className="grid grid-cols-4 gap-6">
-        {data.results.map(auction => (
-          <AuctionCard key={auction.id} auction={auction} />
-        ))}
-      </div>
-      <div className="flex justify-center mt-4">
-        <AppPagination
-          currentPage={params.pageNumber}
-          pageChanged={setPageNumber}
-          pageCount={params.pageCount}
-        />
-      </div>
+      {data.totalCount === 0 ? (
+        <EmptyFilter showReset />
+      ) : (
+        <>
+          <div className="grid grid-cols-4 gap-6">
+            {data.results.map(auction => (
+              <AuctionCard key={auction.id} auction={auction} />
+            ))}
+          </div>
+          <div className="flex justify-center mt-4">
+            <AppPagination
+              currentPage={params.pageNumber}
+              pageChanged={setPageNumber}
+              pageCount={params.pageCount}
+            />
+          </div>
+        </>
+      )}
     </>
   );
 }
